@@ -23,7 +23,11 @@ class MainWindow : public QMainWindow{
     private slots:
         void on_layerNumSB_valueChanged(int arg1);
 
-    private:
+        void on_initializeBttn_clicked();
+
+        void on_trainBttn_clicked();
+
+private:
         Ui::MainWindow *ui;
 
         TrainingPlot* trainingPlot;

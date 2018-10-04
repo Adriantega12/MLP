@@ -61,3 +61,11 @@ void MainWindow::plotClick(QMouseEvent* evt) {
 void MainWindow::on_layerNumSB_valueChanged(int layerNum) {
     ui->neurons2SB->setEnabled(layerNum == 2 ? true : false);
     }
+
+void MainWindow::on_initializeBttn_clicked() {
+    trainingModule->setup( ui->maxEpochsSB->value(), ui->learnRateSB->value(), ui->desiredErrorSB->value() );
+    }
+
+void MainWindow::on_trainBttn_clicked() {
+
+    }

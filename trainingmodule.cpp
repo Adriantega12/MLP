@@ -14,13 +14,16 @@ double TrainingModule::activationFunctionDerivative(std::function<double(double)
     return functionRes * ( 1 - functionRes );
     }
 
-double TrainingModule::getError(Pair p, std::function<double (double)> activationFunction) {
-    // return p.type - activationFunction( inputAndWeightsPointProduct( p.x, p.y ) );
+double TrainingModule::getError(Inputs p, std::function<double (double)> activationFunction) {
     return 0.0;
     }
 
 TrainingModule::TrainingModule()
-    : currentEpoch(0), maxEpochs(99999), learningRate(0.0), desiredError(0.0), rdg(-5.0, 5.0) {
+    : currentEpoch(0),
+      maxEpochs(99999),
+      learningRate(0.0),
+      desiredError(0.0),
+      rdg(-5.0, 5.0) {
 
     }
 
@@ -40,20 +43,14 @@ void TrainingModule::setup(unsigned int mE, double lR, double dE) {
     }
 
 void TrainingModule::addPoint( double x, double y, int type ) {
-    Pair p;
-    trainingSet.push_back( p = { x, y, type } );
-}
+    Inputs p;
+    std::vector<double> in;
+    in.push_back(-1.0);
+    in.push_back(x);
+    in.push_back(y);
+    trainingSet.push_back( p = { in, type } );
+    }
 
 double TrainingModule::getType(double x, double y) {
-    //return inputAndWeightsPointProduct( x, y );
     return 0.0;
     }
-/*
-double TrainingModule::getSlope() {
-    return - ( ( weight0 / weight2 ) / ( weight0 / weight1 ) );
-    }
-
-double TrainingModule::getYIntercept() {
-    return weight0 / weight2;
-    }
-*/

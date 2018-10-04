@@ -14,9 +14,8 @@
 
 class TrainingModule {
     private:
-        struct Pair {
-            double x;
-            double y;
+        struct Inputs {
+            std::vector<double> inputs;
             int type;
             };
 
@@ -30,14 +29,14 @@ class TrainingModule {
 
         Rand_double rdg;
 
-        std::vector<Pair> trainingSet;
+        std::vector<Inputs> trainingSet;
 
         void updateLabels();
 
         // Maths
         static double sigmoidFunction(double xVal);
         double activationFunctionDerivative(std::function<double (double)> activationFunction , double xVal);
-        double getError(Pair p, std::function<double (double)> activationFunction);
+        double getError(Inputs p, std::function<double (double)> activationFunction);
 
     public:
         static const int RED = 0;
