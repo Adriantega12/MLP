@@ -15,7 +15,8 @@ double TrainingModule::activationFunctionDerivative(std::function<double(double)
     }
 
 double TrainingModule::getError(Pair p, std::function<double (double)> activationFunction) {
-    return p.type - activationFunction( inputAndWeightsPointProduct( p.x, p.y ) );
+    // return p.type - activationFunction( inputAndWeightsPointProduct( p.x, p.y ) );
+    return 0.0;
     }
 
 TrainingModule::TrainingModule()

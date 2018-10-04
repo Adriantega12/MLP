@@ -6,10 +6,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
+    // Training module setup
+    trainingModule = new TrainingModule;
+    trainingModule->connectGUIToValues(ui->currentEpochVal, ui->convergenceEpochVal);
+
     connect( ui->trainingPlot, SIGNAL( mousePress(QMouseEvent*) ), this, SLOT( plotClick(QMouseEvent*) ) );
     }
 
 MainWindow::~MainWindow() {
+    delete trainingModule;
     delete ui;
     }
 
@@ -35,11 +40,14 @@ void MainWindow::plotClick(QMouseEvent* evt) {
         // Add points according to the selected class
         if ( ui->redRB->isChecked() ) {
             //trainingPlot->addRedPoint( x, y );
-            //trainingModule->addPoint( x, y, TrainingModule::RED );
+            trainingModule->addPoint( x, y, TrainingModule::RED );
             }
         else if ( ui->blueRB->isChecked() ) {
             //trainingPlot->addBluePoint( x, y );
-            //trainingModule->addPoint( x, y, TrainingModule::BLUE );
+            trainingModule->addPoint( x, y, TrainingModule::BLUE );
+            }
+       else if ( ui->greenRB->isChecked() ) {
+            trainingModule->addPoint( x, y, TrainingModule::GREEN );
             }
         }
     }
