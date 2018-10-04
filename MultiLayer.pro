@@ -28,14 +28,16 @@ SOURCES += \
         mainwindow.cpp \
     qcustomplot.cpp \
     trainingmodule.cpp \
-    trainingplot.cpp
+    trainingplot.cpp \
+    matrix.cpp
 
 HEADERS += \
         mainwindow.h \
     qcustomplot.h \
     trainingmodule.h \
     randdouble.h \
-    trainingplot.h
+    trainingplot.h \
+    matrix.h
 
 FORMS += \
         mainwindow.ui

@@ -23,6 +23,9 @@ class TrainingModule {
         unsigned int maxEpochs;
         double learningRate;
         double desiredError;
+        unsigned int layerNum;
+        unsigned int neuronsLayer1;
+        unsigned int neuronsLayer2;
 
         QLabel* currentEpochLbl;
         QLabel* convergenceEpochLbl;
@@ -48,7 +51,7 @@ class TrainingModule {
 
         void connectGUIToValues(QLabel* cE, QLabel* conv );
 
-        void setup(unsigned int mE, double lR, double dE);
+        void setup(unsigned int mE, double lR, double dE, int lC, int n1, int n2);
 
         void updateValues();
 

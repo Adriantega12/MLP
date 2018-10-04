@@ -23,7 +23,10 @@ TrainingModule::TrainingModule()
       maxEpochs(99999),
       learningRate(0.0),
       desiredError(0.0),
-      rdg(-5.0, 5.0) {
+      rdg(-5.0, 5.0),
+      layerNum(1),
+      neuronsLayer1(1),
+      neuronsLayer2(1) {
 
     }
 
@@ -36,10 +39,13 @@ void TrainingModule::connectGUIToValues(QLabel *cE, QLabel *conv) {
     convergenceEpochLbl = conv;
     }
 
-void TrainingModule::setup(unsigned int mE, double lR, double dE) {
+void TrainingModule::setup(unsigned int mE, double lR, double dE, int lC, int n1, int n2) {
     maxEpochs = mE;
     learningRate = lR;
     desiredError = dE;
+    layerNum = lC;
+    neuronsLayer1 = n1;
+    neuronsLayer2 = n2;
     }
 
 void TrainingModule::addPoint( double x, double y, int type ) {
