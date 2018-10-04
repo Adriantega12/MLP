@@ -40,7 +40,7 @@
       <x>20</x>
       <y>440</y>
       <width>191</width>
-      <height>121</height>
+      <height>151</height>
      </rect>
     </property>
     <property name="title">
@@ -58,6 +58,13 @@
       <widget class="QRadioButton" name="blueRB">
        <property name="text">
         <string>Azul</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="greenRB">
+       <property name="text">
+        <string>Verde</string>
        </property>
       </widget>
      </item>
@@ -145,58 +152,73 @@
      </item>
     </layout>
    </widget>
-   <widget class="QGroupBox" name="weightsGB">
+   <widget class="QGroupBox" name="layersGB">
     <property name="geometry">
      <rect>
       <x>470</x>
       <y>440</y>
-      <width>131</width>
-      <height>101</height>
+      <width>161</width>
+      <height>121</height>
      </rect>
     </property>
     <property name="title">
-     <string>Pesos:</string>
+     <string>Capas:</string>
     </property>
     <layout class="QFormLayout" name="formLayout_2">
      <item row="0" column="0">
-      <widget class="QLabel" name="weight0Lbl">
+      <widget class="QLabel" name="layerNumLbl">
        <property name="text">
-        <string>W0:</string>
+        <string>Núm. Capas:</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLabel" name="weight0Val">
-       <property name="text">
-        <string>#</string>
+      <widget class="QSpinBox" name="layerNumSB">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>2</number>
+       </property>
+       <property name="value">
+        <number>1</number>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="weight1Lbl">
+      <widget class="QLabel" name="layer1Lbl">
        <property name="text">
-        <string>W1:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="weight1Val">
-       <property name="text">
-        <string>#</string>
+        <string>Capa 1: </string>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="weight2Lbl">
+      <widget class="QLabel" name="layer2Lbl">
        <property name="text">
-        <string>W2:</string>
+        <string>Capa 2:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="neurons1SB">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>1</number>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLabel" name="weight2Val">
-       <property name="text">
-        <string>#</string>
+      <widget class="QSpinBox" name="neurons2SB">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>1</number>
        </property>
       </widget>
      </item>
@@ -205,7 +227,7 @@
    <widget class="QGroupBox" name="epochsGB">
     <property name="geometry">
      <rect>
-      <x>580</x>
+      <x>700</x>
       <y>440</y>
       <width>181</width>
       <height>81</height>
@@ -248,8 +270,8 @@
    <widget class="QPushButton" name="initializeBttn">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>550</y>
+      <x>690</x>
+      <y>530</y>
       <width>87</width>
       <height>29</height>
      </rect>
@@ -261,8 +283,8 @@
    <widget class="QPushButton" name="trainBttn">
     <property name="geometry">
      <rect>
-      <x>690</x>
-      <y>550</y>
+      <x>790</x>
+      <y>530</y>
       <width>87</width>
       <height>29</height>
      </rect>
@@ -270,35 +292,6 @@
     <property name="text">
      <string>Entrenar</string>
     </property>
-   </widget>
-   <widget class="QGroupBox" name="modelGB">
-    <property name="geometry">
-     <rect>
-      <x>760</x>
-      <y>440</y>
-      <width>126</width>
-      <height>86</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Modelo:</string>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <widget class="QRadioButton" name="perceptronRB">
-       <property name="text">
-        <string>Perceptrón</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="adalineRB">
-       <property name="text">
-        <string>Adaline</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
