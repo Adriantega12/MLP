@@ -20,18 +20,10 @@ class TrainingModule {
             int type;
             };
 
-        double weight0;
-        double weight1;
-        double weight2;
-
         unsigned int currentEpoch;
         unsigned int maxEpochs;
         double learningRate;
         double desiredError;
-
-        QLabel* w0Lbl;
-        QLabel* w1Lbl;
-        QLabel* w2Lbl;
 
         QLabel* currentEpochLbl;
         QLabel* convergenceEpochLbl;
@@ -65,8 +57,10 @@ class TrainingModule {
 
         double getType( double x, double y );
 
+        /*
         double getSlope();
         double getYIntercept();
+        */
     };
 
 #endif // TRAININGMODULE_H

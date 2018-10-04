@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+#include "trainingplot.h"
 #include "trainingmodule.h"
 
 namespace Ui {
@@ -25,6 +26,7 @@ class MainWindow : public QMainWindow{
     private:
         Ui::MainWindow *ui;
 
+        TrainingPlot* trainingPlot;
         TrainingModule* trainingModule;
     };
 
