@@ -1,5 +1,18 @@
 #include "trainingmodule.h"
 
+void TrainingModule::setupWeightMatrixes() {
+    // First hidden layer
+    weightMatrixes.push_back( new Matrix(neuronsLayer1, INPUT_SIZE + 1) );
+
+    // Second hidden layer if exists
+    if ( layerNum == 2 ) {
+        weightMatrixes.push_back( new Matrix( neuronsLayer2, neuronsLayer1 + 1) );
+        }
+
+    // Output layer
+    weightMatrixes.push_back( new Matrix(OUTPUT_SIZE, weightMatrixes.back()->getRows() + 1) );
+    }
+
 void TrainingModule::updateLabels() {
     currentEpochLbl->setText( QString::number( currentEpoch ) );
     convergenceEpochLbl->setText( QString::number( 0 ) );
@@ -46,6 +59,28 @@ void TrainingModule::setup(unsigned int mE, double lR, double dE, int lC, int n1
     layerNum = lC;
     neuronsLayer1 = n1;
     neuronsLayer2 = n2;
+    setupWeightMatrixes();
+    }
+
+void TrainingModule::training() {
+    double squaredError = 1.0;
+    double error;
+    // a0, [am, ... aM-1], and aM
+    std::vector<std::vector<double>> outputVectors( layerNum + 2, std::vector<double>() );
+
+    currentEpoch = 0;
+
+    // While desired error is less than squared error or max epochs is reached
+    while (currentEpoch < maxEpochs and squaredError > desiredError) {
+        // ---- Start epoch -----
+        // ---- Feedforward -----
+        squaredError = error = 0.0;
+        for (unsigned int trainingIndex = 0; trainingIndex < trainingSet.size(); ++trainingIndex) {
+            //outputVectors[0] = trainingSet;
+
+
+            }
+        }
     }
 
 void TrainingModule::addPoint( double x, double y, int type ) {

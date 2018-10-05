@@ -9,6 +9,7 @@
 #include <functional>
 
 #include "randdouble.h"
+#include "matrix.h"
 /*#include "trainingplot.h"
 #include "errorplot.h"*/
 
@@ -33,7 +34,9 @@ class TrainingModule {
         Rand_double rdg;
 
         std::vector<Inputs> trainingSet;
+        std::vector<Matrix*> weightMatrixes;
 
+        void setupWeightMatrixes();
         void updateLabels();
 
         // Maths
@@ -46,6 +49,9 @@ class TrainingModule {
         static const int BLUE = 1;
         static const int GREEN = 2;
 
+        static const int INPUT_SIZE = 2;
+        static const int OUTPUT_SIZE = 3;
+
         TrainingModule();
         ~TrainingModule();
 
@@ -53,16 +59,13 @@ class TrainingModule {
 
         void setup(unsigned int mE, double lR, double dE, int lC, int n1, int n2);
 
+        void training();
+
         void updateValues();
 
         void addPoint( double x, double y, int type = RED );
 
         double getType( double x, double y );
-
-        /*
-        double getSlope();
-        double getYIntercept();
-        */
     };
 
 #endif // TRAININGMODULE_H
