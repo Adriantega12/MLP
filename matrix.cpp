@@ -7,7 +7,15 @@ Matrix::Matrix(unsigned int m, unsigned int n) : rows(m), columns(n) {
         for (unsigned int j = 0; j < n; ++j) {
             matrixContainer[i].push_back(0.0);
             }
-        }
+    }
+}
+
+int Matrix::getRows() {
+    return rows;
+}
+
+int Matrix::getColumns() {
+    return columns;
     }
 
 std::vector<double>& Matrix::operator[](int index) {
