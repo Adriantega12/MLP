@@ -18,6 +18,7 @@ class Matrix {
         Matrix transpose();
 
         std::vector<double>& operator[](int index);
+        Matrix operator+(Matrix& m);
         Matrix operator*(Matrix& m);
         std::vector<double> operator*(std::vector<double>& v);
         Matrix& operator=(Matrix);

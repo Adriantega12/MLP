@@ -38,7 +38,7 @@ double TrainingModule::sigmoidFunction(double xVal) {
 
 std::vector<double> TrainingModule::sigmoidFunction(std::vector<double> vect) {
     std::vector<double> retVect(vect.size(), 0);
-    for ( int i = 0; i < vect.size(); ++i ) {
+    for ( unsigned int i = 0; i < vect.size(); ++i ) {
         retVect[i] = sigmoidFunction(vect[i]);
         }
     return retVect;
@@ -51,7 +51,7 @@ double TrainingModule::sigmoidDerivative(double xVal) {
 
 std::vector<double> TrainingModule::sigmoidDerivative(std::vector<double> vect) {
     std::vector<double> retVect(vect.size(), 0);
-    for ( int i = 0; i < vect.size(); ++i ) {
+    for ( unsigned int i = 0; i < vect.size(); ++i ) {
         retVect[i] = sigmoidDerivative(vect[i]);
         }
     return retVect;
@@ -59,7 +59,7 @@ std::vector<double> TrainingModule::sigmoidDerivative(std::vector<double> vect) 
 
 std::vector<double> TrainingModule::scalarByVector(double scalar, std::vector<double> vect) {
     std::vector<double> retVect(vect.size(), 0);
-    for ( int i = 0; i < vect.size(); ++i ) {
+    for ( unsigned int i = 0; i < vect.size(); ++i ) {
         retVect[i] = scalar * vect[i];
         }
     return retVect;
@@ -143,14 +143,22 @@ void TrainingModule::training() {
             for (int i = TOTAL_LAYERS - 2; i >= 0; --i) {
                 Matrix transpose = weightMatrixes[i + 1]->transpose();
                 Matrix sigmoidMatrix(weightMatrixes[i + 1]->getRows(), weightMatrixes[i + 1]->getRows());
-                for (unsigned int j = 0; j < sigmoidMatrix.getRows(); ++j) {
+                for (int j = 0; j < sigmoidMatrix.getRows(); ++j) {
                     sigmoidMatrix[j][j] = sigmoidDerivative(netVectors[i][j]);
                     }
                 sensitivityVect[i] = sigmoidMatrix * transpose * sensitivityVect[i + 1];
                 }
 
+            // ---- Weight update ----
+            for ( int i = 0; i < weightMatrixes.size(); ++i ) {
+                Matrix transpose = Matrix(outputVectors[i]).transpose();
+                Matrix sensitivity = scalarByVector(-learningRate, sensitivityVect[i]);
+                Matrix update = transpose * sensitivity;
+                (*weightMatrixes[i]) = (*weightMatrixes[i]) + update;
+                }
+
+            qDebug() << "HELLO";
             }
-        qDebug() << "Ola";
         }
     }
 

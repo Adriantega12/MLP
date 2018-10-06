@@ -42,6 +42,18 @@ std::vector<double>& Matrix::operator[](int index) {
     return matrixContainer[index];
     }
 
+Matrix Matrix::operator+(Matrix& m) {
+    Matrix result(rows, columns);
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+            result[i][j] = matrixContainer[i][j] + m.matrixContainer[i][j];
+            }
+        }
+
+    return result;
+    }
+
 Matrix Matrix::operator*(Matrix& m) {
     double sum;
 
@@ -56,9 +68,9 @@ Matrix Matrix::operator*(Matrix& m) {
         for (unsigned int j = 0; j < m.columns; ++j) {
             sum = 0.0;
             for (unsigned int k = 0; k < this->columns; ++k) {
-                sum += matrixContainer[i][k] * m[k][j];
+                sum += matrixContainer[i][k] * m.matrixContainer[k][j];
                 }
-            mResult[i][j] = sum;
+            mResult.matrixContainer[i][j] = sum;
             }
         }
 
@@ -85,10 +97,13 @@ std::vector<double> Matrix::operator*(std::vector<double>& v) {
     }
 
 Matrix& Matrix::operator=(Matrix m) {
+    matrixContainer.resize(m.rows);
+
     for (int i = 0; i < m.rows; ++i) {
-        this->matrixContainer.push_back( std::vector<double>(m.columns, 0) );
+        matrixContainer[i].resize(m.columns);
         for (int j = 0; j < m.columns; ++j) {
-            this->matrixContainer[i][j] = m[i][j];
+            this->matrixContainer[i][j] = m.matrixContainer[i][j];
             }
         }
+    return *this;
     }
