@@ -63,10 +63,10 @@ TrainingModule::TrainingModule()
       maxEpochs(99999),
       learningRate(0.0),
       desiredError(0.0),
-      rdg(-5.0, 5.0),
       layerNum(1),
       neuronsLayer1(1),
-      neuronsLayer2(1) {
+      neuronsLayer2(1),
+      rdg(-5.0, 5.0) {
     }
 
 TrainingModule::~TrainingModule() {
@@ -89,11 +89,11 @@ void TrainingModule::setup(unsigned int mE, double lR, double dE, int lC, int n1
     }
 
 void TrainingModule::training() {
-    const int TOTAL_LAYERS = layerNum + 1;
+    const unsigned int TOTAL_LAYERS = layerNum + 1;
     double squaredError = 1.0;
     double error;
     // a0, [am, ... aM-1], and aM
-    std::vector<std::vector<double>> outputVectors( TOTAL_LAYERS, std::vector<double>() );
+    std::vector<std::vector<double>> outputVectors( TOTAL_LAYERS + 1, std::vector<double>() );
     // n1, [nm, ... nM-1], and nM
     std::vector<std::vector<double>> netVectors( TOTAL_LAYERS, std::vector<double>() );
 
@@ -112,8 +112,8 @@ void TrainingModule::training() {
             // NO SE ESTÀ ANEXANDO LA ENTRADA DEL UMBRAL
             for (unsigned int i = 0; i < TOTAL_LAYERS; ++i) {
                 netVectors[i] = (*weightMatrixes[i]) * outputVectors[i];
-                if (i + 1 < layerNum + 1) {
-                    outputVectors[i + 1] = sigmoidFunction(netVectors[i]);
+                outputVectors[i + 1] = sigmoidFunction(netVectors[i]);
+                if ( i + 1 < TOTAL_LAYERS ) {
                     outputVectors[i + 1].insert(outputVectors[i + 1].begin(), -1.0);
                     }
                 }
