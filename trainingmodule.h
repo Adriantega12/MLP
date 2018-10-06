@@ -17,7 +17,7 @@ class TrainingModule {
     private:
         struct Inputs {
             std::vector<double> inputs;
-            int type[3];
+            std::vector<int> type;
             };
 
         unsigned int currentEpoch;
@@ -45,7 +45,7 @@ class TrainingModule {
         static double sigmoidFunction(double xVal);
         static std::vector<double> sigmoidFunction(std::vector<double> xVal);
         double activationFunctionDerivative(std::function<double (double)> activationFunction , double xVal);
-        double getError(Inputs p, std::function<double (double)> activationFunction);
+        std::vector<double> getError(std::vector<int>, std::vector<double>);
 
     public:
         static const int RED = 0;

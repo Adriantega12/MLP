@@ -50,8 +50,12 @@ double TrainingModule::activationFunctionDerivative(std::function<double(double)
     return functionRes * ( 1 - functionRes );
     }
 
-double TrainingModule::getError(Inputs p, std::function<double (double)> activationFunction) {
-    return 0.0;
+std::vector<double> TrainingModule::getError(std::vector<int> type, std::vector<double> obtained) {
+    std::vector<double> error;
+    error.push_back(type[RED] - obtained[RED]);
+    error.push_back(type[GREEN] - obtained[GREEN]);
+    error.push_back(type[BLUE] - obtained[BLUE]);
+    return error;
     }
 
 TrainingModule::TrainingModule()
@@ -115,17 +119,22 @@ void TrainingModule::training() {
                 }
 
             // Backpropagation
+            // sensitivity[TOTAL_LAYERS - 1] = -2 * sigmoidDerivate(netVectors[TOTAL_LAYERS - 1]) * error
             }
         }
     }
 
-void TrainingModule::addPoint( double x, double y, int type ) {
+void TrainingModule::addPoint( double x, double y, int t ) {
     Inputs p;
     std::vector<double> in;
+    std::vector<int> type;
     in.push_back(-1.0);
     in.push_back(x);
     in.push_back(y);
-    trainingSet.push_back( p = { in, { type == RED, type == GREEN, type == BLUE } } );
+    type.push_back(t == RED);
+    type.push_back(t == GREEN);
+    type.push_back(t == BLUE);
+    trainingSet.push_back( p = { in, type } );
     }
 
 double TrainingModule::getType(double x, double y) {
