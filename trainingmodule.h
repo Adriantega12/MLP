@@ -17,7 +17,7 @@ class TrainingModule {
     private:
         struct Inputs {
             std::vector<double> inputs;
-            int type;
+            int type[3];
             };
 
         unsigned int currentEpoch;
@@ -35,12 +35,15 @@ class TrainingModule {
 
         std::vector<Inputs> trainingSet;
         std::vector<Matrix*> weightMatrixes;
+        std::vector<std::vector<double>> outputVectors;
 
         void setupWeightMatrixes();
+        void initializeMatrix( Matrix* );
         void updateLabels();
 
         // Maths
         static double sigmoidFunction(double xVal);
+        static std::vector<double> sigmoidFunction(std::vector<double> xVal);
         double activationFunctionDerivative(std::function<double (double)> activationFunction , double xVal);
         double getError(Inputs p, std::function<double (double)> activationFunction);
 

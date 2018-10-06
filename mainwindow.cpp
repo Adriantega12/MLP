@@ -68,5 +68,5 @@ void MainWindow::on_initializeBttn_clicked() {
     }
 
 void MainWindow::on_trainBttn_clicked() {
-
+    trainingModule->training();
     }

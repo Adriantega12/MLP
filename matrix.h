@@ -10,14 +10,15 @@ class Matrix {
         unsigned int columns;
 
     public:
-        Matrix(unsigned int m, unsigned int n);
+        Matrix(unsigned int m = 0, unsigned int n = 0);
 
         int getRows();
         int getColumns();
 
         std::vector<double>& operator[](int index);
-        Matrix* operator*(Matrix& m);
-        std::vector<double>* operator*(std::vector<double>& v);
+        Matrix operator*(Matrix& m);
+        std::vector<double> operator*(std::vector<double>& v);
+        Matrix& operator=(Matrix);
     };
 
 #endif // MATRIX_H

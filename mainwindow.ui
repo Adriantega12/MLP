@@ -55,16 +55,16 @@
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="blueRB">
+      <widget class="QRadioButton" name="greenRB">
        <property name="text">
-        <string>Azul</string>
+        <string>Verde</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="greenRB">
+      <widget class="QRadioButton" name="blueRB">
        <property name="text">
-        <string>Verde</string>
+        <string>Azul</string>
        </property>
       </widget>
      </item>
