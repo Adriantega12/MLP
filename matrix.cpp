@@ -2,13 +2,21 @@
 
 // Renglones = m, columnas = n
 Matrix::Matrix(unsigned int m, unsigned int n) : rows(m), columns(n) {
-    for (unsigned int i = 0; i < m; ++i) {
+
+    for (unsigned int i = 0; i < rows; ++i) {
         matrixContainer.push_back(std::vector<double>(n, 0));
-        for (unsigned int j = 0; j < n; ++j) {
+        for (unsigned int j = 0; j < columns; ++j) {
             matrixContainer[i][j] = 0.0;
             }
+        }
     }
-}
+
+Matrix::Matrix(std::vector<double> vect)
+    : Matrix(1, vect.size()) {
+    for (unsigned int i = 0; i < columns; ++i) {
+        matrixContainer[0][i] = vect[i];
+        }
+    }
 
 int Matrix::getRows() {
     return rows;
@@ -16,6 +24,18 @@ int Matrix::getRows() {
 
 int Matrix::getColumns() {
     return columns;
+    }
+
+Matrix Matrix::transpose() {
+    Matrix transpose(columns, rows);
+
+    for (unsigned int i = 0; i < rows; ++i) {
+        for (unsigned int j = 0; j < columns; ++j) {
+            transpose[j][i] = matrixContainer[i][j];
+            }
+        }
+
+    return transpose;
     }
 
 std::vector<double>& Matrix::operator[](int index) {
@@ -36,7 +56,7 @@ Matrix Matrix::operator*(Matrix& m) {
         for (unsigned int j = 0; j < m.columns; ++j) {
             sum = 0.0;
             for (unsigned int k = 0; k < this->columns; ++k) {
-                sum += (*this)[i][k] * m[k][j];
+                sum += matrixContainer[i][k] * m[k][j];
                 }
             mResult[i][j] = sum;
             }
@@ -56,7 +76,7 @@ std::vector<double> Matrix::operator*(std::vector<double>& v) {
     for (unsigned int rows = 0; rows < this->rows; ++rows) {
         linealCombination = 0.0;
         for (unsigned int cols = 0; cols < this->columns; ++cols) {
-            linealCombination += (*this)[rows][cols] * v[cols];
+            linealCombination += this->matrixContainer[rows][cols] * v[cols];
             }
         vResult[rows] = linealCombination;
         }

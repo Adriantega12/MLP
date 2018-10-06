@@ -38,16 +38,31 @@ double TrainingModule::sigmoidFunction(double xVal) {
 
 std::vector<double> TrainingModule::sigmoidFunction(std::vector<double> vect) {
     std::vector<double> retVect(vect.size(), 0);
-    //retVect[0] = -1.0;
     for ( int i = 0; i < vect.size(); ++i ) {
-        retVect[i] = TrainingModule::sigmoidFunction(vect[i]);
+        retVect[i] = sigmoidFunction(vect[i]);
         }
     return retVect;
     }
 
-double TrainingModule::activationFunctionDerivative(std::function<double(double)> activationFunction, double xVal) {
-    double functionRes = activationFunction( xVal );
-    return functionRes * ( 1 - functionRes );
+double TrainingModule::sigmoidDerivative(double xVal) {
+    double functionRes = sigmoidFunction(xVal);
+    return functionRes * (1 - functionRes);
+    }
+
+std::vector<double> TrainingModule::sigmoidDerivative(std::vector<double> vect) {
+    std::vector<double> retVect(vect.size(), 0);
+    for ( int i = 0; i < vect.size(); ++i ) {
+        retVect[i] = sigmoidDerivative(vect[i]);
+        }
+    return retVect;
+    }
+
+std::vector<double> TrainingModule::scalarByVector(double scalar, std::vector<double> vect) {
+    std::vector<double> retVect(vect.size(), 0);
+    for ( int i = 0; i < vect.size(); ++i ) {
+        retVect[i] = scalar * vect[i];
+        }
+    return retVect;
     }
 
 std::vector<double> TrainingModule::getError(std::vector<int> type, std::vector<double> obtained) {
@@ -92,10 +107,12 @@ void TrainingModule::training() {
     const unsigned int TOTAL_LAYERS = layerNum + 1;
     double squaredError = 1.0;
     double error;
-    // a0, [am, ... aM-1], and aM
+    // a0, [am, ..., aM-1], and aM
     std::vector<std::vector<double>> outputVectors( TOTAL_LAYERS + 1, std::vector<double>() );
-    // n1, [nm, ... nM-1], and nM
+    // n1, [nm, ..., nM-1], and nM
     std::vector<std::vector<double>> netVectors( TOTAL_LAYERS, std::vector<double>() );
+    // s1, [sm, ..., sM-1], and sM
+    std::vector<std::vector<double>> sensitivityVect( TOTAL_LAYERS, std::vector<double>() );
 
     currentEpoch = 0;
 
@@ -118,9 +135,22 @@ void TrainingModule::training() {
                     }
                 }
 
-            // Backpropagation
-            // sensitivity[TOTAL_LAYERS - 1] = -2 * sigmoidDerivate(netVectors[TOTAL_LAYERS - 1]) * error
+            // ---- Backpropagation ----
+            std::vector<double> errorVect = getError(trainingSet[trainingIndex].type, outputVectors[TOTAL_LAYERS]);
+            std::vector<double> derivative = sigmoidDerivative(netVectors[TOTAL_LAYERS - 1]);
+            sensitivityVect[TOTAL_LAYERS - 1] = Matrix(scalarByVector(-2, derivative)) * errorVect;
+
+            for (int i = TOTAL_LAYERS - 2; i >= 0; --i) {
+                Matrix transpose = weightMatrixes[i + 1]->transpose();
+                Matrix sigmoidMatrix(weightMatrixes[i + 1]->getRows(), weightMatrixes[i + 1]->getRows());
+                for (unsigned int j = 0; j < sigmoidMatrix.getRows(); ++j) {
+                    sigmoidMatrix[j][j] = sigmoidDerivative(netVectors[i][j]);
+                    }
+                sensitivityVect[i] = sigmoidMatrix * transpose * sensitivityVect[i + 1];
+                }
+
             }
+        qDebug() << "Ola";
         }
     }
 

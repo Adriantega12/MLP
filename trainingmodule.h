@@ -44,7 +44,9 @@ class TrainingModule {
         // Maths
         static double sigmoidFunction(double xVal);
         static std::vector<double> sigmoidFunction(std::vector<double> xVal);
-        double activationFunctionDerivative(std::function<double (double)> activationFunction , double xVal);
+        static double sigmoidDerivative(double xVal);
+        static std::vector<double> sigmoidDerivative(std::vector<double> vect);
+        static std::vector<double> scalarByVector(double, std::vector<double>);
         std::vector<double> getError(std::vector<int>, std::vector<double>);
 
     public:

@@ -11,9 +11,11 @@ class Matrix {
 
     public:
         Matrix(unsigned int m = 0, unsigned int n = 0);
+        Matrix(std::vector<double>);
 
         int getRows();
         int getColumns();
+        Matrix transpose();
 
         std::vector<double>& operator[](int index);
         Matrix operator*(Matrix& m);
