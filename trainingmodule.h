@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <functional>
+#include <cmath>
 
 #include "randdouble.h"
 #include "matrix.h"
