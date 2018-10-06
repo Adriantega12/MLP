@@ -37,9 +37,9 @@ double TrainingModule::sigmoidFunction(double xVal) {
     }
 
 std::vector<double> TrainingModule::sigmoidFunction(std::vector<double> vect) {
-    std::vector<double> retVect(vect.size() + 1, 0);
-    retVect[0] = -1.0;
-    for ( int i = 1; i < vect.size(); ++i ) {
+    std::vector<double> retVect(vect.size(), 0);
+    //retVect[0] = -1.0;
+    for ( int i = 0; i < vect.size(); ++i ) {
         retVect[i] = TrainingModule::sigmoidFunction(vect[i]);
         }
     return retVect;
@@ -105,10 +105,12 @@ void TrainingModule::training() {
             outputVectors[0] = trainingSet[0].inputs;
 
             // ---- Feedforward -----
+            // NO SE ESTÀ ANEXANDO LA ENTRADA DEL UMBRAL
             for (unsigned int i = 0; i < TOTAL_LAYERS; ++i) {
                 netVectors[i] = (*weightMatrixes[i]) * outputVectors[i];
                 if (i + 1 < layerNum + 1) {
                     outputVectors[i + 1] = sigmoidFunction(netVectors[i]);
+                    outputVectors[i + 1].insert(outputVectors[i + 1].begin(), -1.0);
                     }
                 }
 
