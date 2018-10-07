@@ -61,7 +61,7 @@ class TrainingModule {
         static const int BLUE = 2;
 
         static const int INPUT_SIZE = 2;
-        static const int OUTPUT_SIZE = 3;
+        static const int OUTPUT_SIZE = 1;
 
         TrainingModule();
         ~TrainingModule();

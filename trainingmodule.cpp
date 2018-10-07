@@ -164,7 +164,9 @@ void TrainingModule::training( TrainingPlot* tp ) {
                     sensitivityVect[i] = sigmoidMatrix * transpose * sensitivityVect[i + 1];
                     }
                 }
-            squaredError += sqrt(pow(errorVect[0],2) + pow(errorVect[1],2) + pow(errorVect[2],2))/2;
+            // squaredError += sqrt(pow(errorVect[0],2) + pow(errorVect[1],2) + pow(errorVect[2],2))/2;
+            squaredError += pow(errorVect[0],2)/2;
+            qDebug() << squaredError;
 
             // ---- Weight update ----
             for ( int i = 0; i < weightMatrixes.size(); ++i ) {
@@ -202,8 +204,6 @@ void TrainingModule::addPoint( double x, double y, int t ) {
     in.push_back(x);
     in.push_back(y);
     type.push_back(t == RED);
-    type.push_back(t == GREEN);
-    type.push_back(t == BLUE);
     trainingSet.push_back( p = { in, type } );
     }
 
@@ -217,9 +217,9 @@ int TrainingModule::getType(double x, double y) {
     outputs[0].push_back(y);
     results = feedforward(outputs, nets);
     r = results[RED] > 0.9 ? 1 : 0;
-    g = results[GREEN] > 0.9 ? 1 : 0;
-    b = results[BLUE] > 0.9 ? 1 : 0;
+    /*g = results[GREEN] > 0.9 ? 1 : 0;
+    b = results[BLUE] > 0.9 ? 1 : 0;*/
     qDebug() << results;
-    qDebug() << "R: " << r << " G: " << g << " B: " << b;
+    qDebug() << "R: " << r /*<< " G: " << g << " B: " << b*/;
     return 0;
     }
