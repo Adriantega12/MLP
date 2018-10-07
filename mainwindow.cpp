@@ -29,7 +29,7 @@ void MainWindow::plotClick(QMouseEvent* evt) {
                y = ui->trainingPlot->yAxis->pixelToCoord( evt->y() );
 
         if ( ui->classifyCB->isChecked() ) {
-            //double type = trainingModule->getType( x, y );
+            int type = trainingModule->getType( x, y );
 
             //if ( type <= 0 ) {
                 //trainingPlot->addRedPoint( x, y );

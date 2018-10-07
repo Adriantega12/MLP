@@ -28,6 +28,7 @@ class TrainingModule {
         unsigned int layerNum;
         unsigned int neuronsLayer1;
         unsigned int neuronsLayer2;
+        unsigned int totalLayers;
 
         QLabel* currentEpochLbl;
         QLabel* convergenceEpochLbl;
@@ -52,8 +53,8 @@ class TrainingModule {
 
     public:
         static const int RED = 0;
-        static const int BLUE = 1;
-        static const int GREEN = 2;
+        static const int GREEN = 1;
+        static const int BLUE = 2;
 
         static const int INPUT_SIZE = 2;
         static const int OUTPUT_SIZE = 3;
@@ -71,7 +72,9 @@ class TrainingModule {
 
         void addPoint( double x, double y, int type = RED );
 
-        double getType( double x, double y );
+        std::vector<double> feedforward(std::vector<std::vector<double>>&, std::vector<std::vector<double>>&);
+
+        int getType( double x, double y );
     };
 
 #endif // TRAININGMODULE_H

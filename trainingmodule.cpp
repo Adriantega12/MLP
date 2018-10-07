@@ -126,19 +126,13 @@ void TrainingModule::training() {
             outputVectors[0] = trainingSet[0].inputs;
 
             // ---- Feedforward -----
-            // NO SE ESTÀ ANEXANDO LA ENTRADA DEL UMBRAL
-            for (unsigned int i = 0; i < TOTAL_LAYERS; ++i) {
-                netVectors[i] = (*weightMatrixes[i]) * outputVectors[i];
-                outputVectors[i + 1] = sigmoidFunction(netVectors[i]);
-                if ( i + 1 < TOTAL_LAYERS ) {
-                    outputVectors[i + 1].insert(outputVectors[i + 1].begin(), -1.0);
-                    }
-                }
+            feedforward(outputVectors, netVectors);
 
             // ---- Backpropagation ----
             errorVect = getError(trainingSet[trainingIndex].type, outputVectors[TOTAL_LAYERS]);
             std::vector<double> derivative = sigmoidDerivative(netVectors[TOTAL_LAYERS - 1]);
-            sensitivityVect[TOTAL_LAYERS - 1] = Matrix(scalarByVector(-2, derivative)) * errorVect;
+            // sensitivityVect[TOTAL_LAYERS - 1] = Matrix(scalarByVector(-2, derivative)) * errorVect;
+            // sensitivityVect[TOTAL_LAYERS - 1]
 
             for (int i = TOTAL_LAYERS - 2; i >= 0; --i) {
                 Matrix transpose = weightMatrixes[i + 1]->transpose();
@@ -148,18 +142,34 @@ void TrainingModule::training() {
                     }
                 sensitivityVect[i] = sigmoidMatrix * transpose * sensitivityVect[i + 1];
                 }
+            squaredError += sqrt(pow(errorVect[0],2) + pow(errorVect[1],2) + pow(errorVect[2],2))/2;
 
             // ---- Weight update ----
             for ( int i = 0; i < weightMatrixes.size(); ++i ) {
-                Matrix transpose = Matrix(outputVectors[i]).transpose();
-                Matrix sensitivity = scalarByVector(-learningRate, sensitivityVect[i]);
-                Matrix update = transpose * sensitivity;
+                Matrix transpose = Matrix(outputVectors[i]);
+                Matrix sensitivity = Matrix(scalarByVector(-learningRate, sensitivityVect[i])).transpose();
+                Matrix update = sensitivity * transpose;
                 (*weightMatrixes[i]) = (*weightMatrixes[i]) + update;
                 }
             }
-        squaredError += sqrt(pow(errorVect[0],2) + pow(errorVect[1],2) + pow(errorVect[2],2))/2;
         ++currentEpoch;
+
+        updateLabels();
+        convergenceEpochLbl->setText( QString::number( currentEpoch ) );
         }
+    }
+
+std::vector<double> TrainingModule::feedforward(std::vector<std::vector<double>>& outputs, std::vector<std::vector<double>>& nets) {
+    totalLayers = layerNum + 1;
+    for (unsigned int i = 0; i < totalLayers; ++i) {
+        nets[i] = (*weightMatrixes[i]) * outputs[i];
+        outputs[i + 1] = sigmoidFunction(nets[i]);
+        if ( i + 1 < totalLayers ) {
+            outputs[i + 1].insert(outputs[i + 1].begin(), -1.0);
+            }
+        }
+
+    return outputs[totalLayers];
     }
 
 void TrainingModule::addPoint( double x, double y, int t ) {
@@ -175,6 +185,18 @@ void TrainingModule::addPoint( double x, double y, int t ) {
     trainingSet.push_back( p = { in, type } );
     }
 
-double TrainingModule::getType(double x, double y) {
-    return 0.0;
+int TrainingModule::getType(double x, double y) {
+    std::vector<std::vector<double>> outputs(totalLayers + 1, std::vector<double>() );
+    std::vector<double> results;
+    std::vector<std::vector<double>> nets( totalLayers, std::vector<double>() );
+    int r, g, b;
+    outputs[0].push_back(-1);
+    outputs[0].push_back(x);
+    outputs[0].push_back(y);
+    results = feedforward(outputs, nets);
+    r = results[RED] > 0.9 ? 1 : 0;
+    g = results[GREEN] > 0.9 ? 1 : 0;
+    b = results[BLUE] > 0.9 ? 1 : 0;
+    qDebug() << "R: " << r << " G: " << g << " B: " << b;
+    return 0;
     }
