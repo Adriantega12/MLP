@@ -29,7 +29,11 @@ void TrainingModule::initializeMatrix(Matrix* m ) {
 
 void TrainingModule::updateLabels() {
     currentEpochLbl->setText( QString::number( currentEpoch ) );
-    convergenceEpochLbl->setText( QString::number( 0 ) );
+    }
+
+void TrainingModule::updateGUI(TrainingPlot* tp) {
+    tp->updatePlot();
+    updateLabels();
     }
 
 double TrainingModule::sigmoidFunction(double xVal) {
@@ -113,9 +117,13 @@ void TrainingModule::setup(unsigned int mE, double lR, double dE, int lC, int n1
     neuronsLayer1 = n1;
     neuronsLayer2 = n2;
     setupWeightMatrixes();
+}
+
+Matrix* TrainingModule::getFirstLayerMatrix() {
+    return weightMatrixes[0];
     }
 
-void TrainingModule::training() {
+void TrainingModule::training( TrainingPlot* tp ) {
     const unsigned int TOTAL_LAYERS = layerNum + 1;
     double squaredError = 1.0;
     std::vector<double> errorVect;
@@ -168,9 +176,9 @@ void TrainingModule::training() {
             }
         ++currentEpoch;
 
-        updateLabels();
         convergenceEpochLbl->setText( QString::number( currentEpoch ) );
         }
+    updateGUI( tp );
     }
 
 std::vector<double> TrainingModule::feedforward(std::vector<std::vector<double>>& outputs, std::vector<std::vector<double>>& nets) {

@@ -1,5 +1,13 @@
 #include "trainingplot.h"
 
+double TrainingPlot::getSlope(std::vector<double> vect) {
+    return - ( ( vect[0] / vect[2] ) / ( vect[0] / vect[1] ) );
+    }
+
+double TrainingPlot::getYIntercept(std::vector<double> vect) {
+    return vect[0] / vect[2];
+    }
+
 TrainingPlot::TrainingPlot( QCustomPlot* plot ) {
     bluePoints = new QCPGraph( plot->xAxis, plot->yAxis );
     redPoints = new QCPGraph( plot->xAxis, plot->yAxis );
@@ -48,19 +56,41 @@ void TrainingPlot::setup( QCustomPlot* plot ) {
     greenPoints->setScatterStyle(QCPScatterStyle::ssCircle);
 }
 
-void TrainingPlot::updatePlot(double slope, double yIntercept) {
-    /*
-    lineY[0] = lineX[0] * slope + yIntercept;
-    lineY[1] = lineX[1] * slope + yIntercept;
-    lineY[2] = lineX[2] * slope + yIntercept;
-
-    for ( unsigned int i = 0; i < lineY.size(); ++i ) {
-        lineY[i] = lineX[i] * slope + yIntercept;
+void TrainingPlot::setupMatrix(Matrix* m) {
+    firstLayer = m;
+    QVector<double> lineX, lineY;
+    lineX.push_back(-6);
+    lineX.push_back(0);
+    lineX.push_back(6);
+    lineY.push_back(0);
+    lineY.push_back(0);
+    lineY.push_back(0);
+    for (int i = 0; i < m->getRows(); ++i) {
+        trainingPlot->addGraph();
+        lineY[0] = -6 * getSlope((*m)[i]) + getYIntercept((*m)[i]);
+        lineY[1] = 0 * getSlope((*m)[i]) + getYIntercept((*m)[i]);
+        lineY[2] = 6 * getSlope((*m)[i]) + getYIntercept((*m)[i]);
+        trainingPlot->graph(3 + i)->setData(lineX, lineY);
         }
-
-    trainingPlot->graph(2)->setData(lineX, lineY);
     trainingPlot->replot();
-    */
+    }
+
+void TrainingPlot::updatePlot() {
+    QVector<double> lineX, lineY;
+    lineX.push_back(-6);
+    lineX.push_back(0);
+    lineX.push_back(6);
+    lineY.push_back(0);
+    lineY.push_back(0);
+    lineY.push_back(0);
+    for (int i = 0; i < firstLayer->getRows(); ++i) {
+        trainingPlot->addGraph();
+        lineY[0] = -6 * getSlope((*firstLayer)[i]) + getYIntercept((*firstLayer)[i]);
+        lineY[1] = 0 * getSlope((*firstLayer)[i]) + getYIntercept((*firstLayer)[i]);
+        lineY[2] = 6 * getSlope((*firstLayer)[i]) + getYIntercept((*firstLayer)[i]);
+        trainingPlot->graph(3 + i)->setData(lineX, lineY);
+        }
+    trainingPlot->replot();
     }
 
 void TrainingPlot::addPoint( double x, double y, int type ) {

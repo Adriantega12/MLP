@@ -3,6 +3,7 @@
 
 #include "qcustomplot.h"
 #include "trainingmodule.h"
+#include "matrix.h"
 
 class TrainingPlot {
     private:
@@ -12,16 +13,22 @@ class TrainingPlot {
         QCPGraph* bluePoints;
         QCPGraph* greenPoints;
 
-        QVector<double> lineX;
-        QVector<double> lineY;
+        Matrix* firstLayer;
+
+        double getSlope(std::vector<double>);
+        double getYIntercept(std::vector<double>);
+
+        QVector<QVector<double>> linesX;
+        QVector<QVector<double>> linesY;
 
     public:
         TrainingPlot( QCustomPlot* plot );
         ~TrainingPlot();
 
         void setup( QCustomPlot* plot );
+        void setupMatrix( Matrix* );
 
-        void updatePlot(double slope, double yIntercept);
+        void updatePlot();
 
         void addPoint(double x, double y , int type);
     };

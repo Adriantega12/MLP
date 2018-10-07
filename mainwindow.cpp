@@ -65,8 +65,9 @@ void MainWindow::on_layerNumSB_valueChanged(int layerNum) {
 void MainWindow::on_initializeBttn_clicked() {
     trainingModule->setup( ui->maxEpochsSB->value(), ui->learnRateSB->value(), ui->desiredErrorSB->value(),
                            ui->layerNumSB->value(), ui->neurons1SB->value(), ui->neurons2SB->value() );
+    trainingPlot->setupMatrix(trainingModule->getFirstLayerMatrix());
     }
 
 void MainWindow::on_trainBttn_clicked() {
-    trainingModule->training();
+    trainingModule->training( trainingPlot );
     }

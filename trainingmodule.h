@@ -11,8 +11,10 @@
 
 #include "randdouble.h"
 #include "matrix.h"
-/*#include "trainingplot.h"
-#include "errorplot.h"*/
+#include "trainingplot.h"
+//#include "errorplot.h"
+
+class TrainingPlot;
 
 class TrainingModule {
     private:
@@ -42,6 +44,7 @@ class TrainingModule {
         void setupWeightMatrixes();
         void initializeMatrix( Matrix* );
         void updateLabels();
+        void updateGUI( TrainingPlot* );
 
         // Maths
         static double sigmoidFunction(double xVal);
@@ -67,7 +70,9 @@ class TrainingModule {
 
         void setup(unsigned int mE, double lR, double dE, int lC, int n1, int n2);
 
-        void training();
+        Matrix* getFirstLayerMatrix();
+
+        void training( TrainingPlot* );
 
         void updateValues();
 
