@@ -16,6 +16,7 @@ class Matrix {
         int getRows();
         int getColumns();
         Matrix transpose();
+        Matrix cutFirstRow();
 
         std::vector<double>& operator[](int index);
         Matrix operator+(Matrix& m);

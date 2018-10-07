@@ -49,6 +49,7 @@ class TrainingModule {
         static double sigmoidDerivative(double xVal);
         static std::vector<double> sigmoidDerivative(std::vector<double> vect);
         static std::vector<double> scalarByVector(double, std::vector<double>);
+        static Matrix scalarByMatrix(double, Matrix);
         std::vector<double> getError(std::vector<int>, std::vector<double>);
 
     public:

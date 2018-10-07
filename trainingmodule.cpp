@@ -63,6 +63,18 @@ std::vector<double> TrainingModule::scalarByVector(double scalar, std::vector<do
         retVect[i] = scalar * vect[i];
         }
     return retVect;
+}
+
+Matrix TrainingModule::scalarByMatrix(double scalar, Matrix m) {
+    Matrix result(m.getRows(), m.getColumns());
+
+    for (int i = 0; i < m.getRows(); ++i) {
+        for (int j = 0; j < m.getColumns(); ++j) {
+            result[i][j] = scalar * m[i][j];
+            }
+        }
+
+    return result;
     }
 
 std::vector<double> TrainingModule::getError(std::vector<int> type, std::vector<double> obtained) {
@@ -129,18 +141,20 @@ void TrainingModule::training() {
             feedforward(outputVectors, netVectors);
 
             // ---- Backpropagation ----
-            errorVect = getError(trainingSet[trainingIndex].type, outputVectors[TOTAL_LAYERS]);
-            std::vector<double> derivative = sigmoidDerivative(netVectors[TOTAL_LAYERS - 1]);
-            // sensitivityVect[TOTAL_LAYERS - 1] = Matrix(scalarByVector(-2, derivative)) * errorVect;
-            // sensitivityVect[TOTAL_LAYERS - 1]
-
-            for (int i = TOTAL_LAYERS - 2; i >= 0; --i) {
-                Matrix transpose = weightMatrixes[i + 1]->transpose();
-                Matrix sigmoidMatrix(weightMatrixes[i + 1]->getRows(), weightMatrixes[i + 1]->getRows());
+            for (int i = TOTAL_LAYERS - 1; i >= 0; --i) {
+                Matrix sigmoidMatrix(netVectors[i].size(), netVectors[i].size());
                 for (int j = 0; j < sigmoidMatrix.getRows(); ++j) {
                     sigmoidMatrix[j][j] = sigmoidDerivative(netVectors[i][j]);
                     }
-                sensitivityVect[i] = sigmoidMatrix * transpose * sensitivityVect[i + 1];
+
+                if ( i == TOTAL_LAYERS - 1 ) {
+                    errorVect = getError(trainingSet[trainingIndex].type, outputVectors[TOTAL_LAYERS]);
+                    sensitivityVect[i] = scalarByMatrix(-2.0, sigmoidMatrix) * errorVect;
+                    }
+                else {
+                    Matrix transpose = weightMatrixes[i + 1]->transpose().cutFirstRow();
+                    sensitivityVect[i] = sigmoidMatrix * transpose * sensitivityVect[i + 1];
+                    }
                 }
             squaredError += sqrt(pow(errorVect[0],2) + pow(errorVect[1],2) + pow(errorVect[2],2))/2;
 
@@ -197,6 +211,7 @@ int TrainingModule::getType(double x, double y) {
     r = results[RED] > 0.9 ? 1 : 0;
     g = results[GREEN] > 0.9 ? 1 : 0;
     b = results[BLUE] > 0.9 ? 1 : 0;
+    qDebug() << results;
     qDebug() << "R: " << r << " G: " << g << " B: " << b;
     return 0;
     }

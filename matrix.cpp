@@ -36,6 +36,18 @@ Matrix Matrix::transpose() {
         }
 
     return transpose;
+}
+
+Matrix Matrix::cutFirstRow() {
+    Matrix result(rows - 1, columns);
+
+    for (int i = 1; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+            result[i - 1][j] = matrixContainer[i][j];
+            }
+        }
+
+    return result;
     }
 
 std::vector<double>& Matrix::operator[](int index) {
