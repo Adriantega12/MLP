@@ -165,6 +165,7 @@ void TrainingModule::training( TrainingPlot* tp ) {
                     }
                 }
             squaredError += sqrt(pow(errorVect[0],2) + pow(errorVect[1],2) + pow(errorVect[2],2))/2;
+            qDebug() << squaredError;
 
             // ---- Weight update ----
             for ( int i = 0; i < weightMatrixes.size(); ++i ) {
