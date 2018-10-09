@@ -12,6 +12,9 @@ TrainingPlot::TrainingPlot( QCustomPlot* plot ) {
     bluePoints = new QCPGraph( plot->xAxis, plot->yAxis );
     redPoints = new QCPGraph( plot->xAxis, plot->yAxis );
     greenPoints = new QCPGraph( plot->xAxis, plot->yAxis );
+    gradientRed = new QCPGraph( plot->xAxis, plot->yAxis );
+    gradientBlue = new QCPGraph( plot->xAxis, plot->yAxis );
+    gradientGreen = new QCPGraph( plot->xAxis, plot->yAxis );
 
     setup( plot );
     }
@@ -47,13 +50,23 @@ void TrainingPlot::setup( QCustomPlot* plot ) {
     // Set styles for inputs
     redPoints->setPen( QPen(Qt::red) );
     redPoints->setLineStyle( QCPGraph::lsNone );
-    redPoints->setScatterStyle(QCPScatterStyle::ssCircle);
+    redPoints->setScatterStyle(QCPScatterStyle::ssDisc);
     bluePoints->setPen( QPen(Qt::blue) );
     bluePoints->setLineStyle( QCPGraph::lsNone );
-    bluePoints->setScatterStyle(QCPScatterStyle::ssCircle);
+    bluePoints->setScatterStyle(QCPScatterStyle::ssDisc);
     greenPoints->setPen( QPen(Qt::green) );
     greenPoints->setLineStyle( QCPGraph::lsNone );
-    greenPoints->setScatterStyle(QCPScatterStyle::ssCircle);
+    greenPoints->setScatterStyle(QCPScatterStyle::ssDisc);
+    // Gradient
+    gradientRed->setPen( QPen(Qt::red) );
+    gradientRed->setLineStyle( QCPGraph::lsNone );
+    gradientRed->setScatterStyle(QCPScatterStyle::ssCircle);
+    gradientBlue->setPen( QPen(Qt::blue) );
+    gradientBlue->setLineStyle( QCPGraph::lsNone );
+    gradientBlue->setScatterStyle(QCPScatterStyle::ssCircle);
+    gradientGreen->setPen( QPen(Qt::green) );
+    gradientGreen->setLineStyle( QCPGraph::lsNone );
+    gradientGreen->setScatterStyle(QCPScatterStyle::ssCircle);
 }
 
 void TrainingPlot::setupMatrix(Matrix* m) {
@@ -70,7 +83,7 @@ void TrainingPlot::setupMatrix(Matrix* m) {
         lineY[0] = -6 * getSlope((*m)[i]) + getYIntercept((*m)[i]);
         lineY[1] = 0 * getSlope((*m)[i]) + getYIntercept((*m)[i]);
         lineY[2] = 6 * getSlope((*m)[i]) + getYIntercept((*m)[i]);
-        trainingPlot->graph(3 + i)->setData(lineX, lineY);
+        trainingPlot->graph(6 + i)->setData(lineX, lineY);
         }
     trainingPlot->replot();
     }
@@ -88,7 +101,7 @@ void TrainingPlot::updatePlot() {
         lineY[0] = -6 * getSlope((*firstLayer)[i]) + getYIntercept((*firstLayer)[i]);
         lineY[1] = 0 * getSlope((*firstLayer)[i]) + getYIntercept((*firstLayer)[i]);
         lineY[2] = 6 * getSlope((*firstLayer)[i]) + getYIntercept((*firstLayer)[i]);
-        trainingPlot->graph(3 + i)->setData(lineX, lineY);
+        trainingPlot->graph(6 + i)->setData(lineX, lineY);
         }
     trainingPlot->replot();
     }
@@ -109,4 +122,20 @@ void TrainingPlot::addPoint( double x, double y, int type ) {
         }
 
     trainingPlot->replot();
+}
+
+void TrainingPlot::addToGradient( double x, double y, int type ) {
+    switch (type) {
+        case TrainingModule::RED:
+            gradientRed->addData(x, y);
+            break;
+        case TrainingModule::BLUE:
+            gradientBlue->addData(x, y);
+            break;
+        case TrainingModule::GREEN:
+            gradientGreen->addData(x, y);
+            break;
+        default:
+            break;
+        }
     }

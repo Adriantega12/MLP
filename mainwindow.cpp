@@ -29,7 +29,7 @@ void MainWindow::plotClick(QMouseEvent* evt) {
                y = ui->trainingPlot->yAxis->pixelToCoord( evt->y() );
 
         if ( ui->classifyCB->isChecked() ) {
-            int type = trainingModule->getType( x, y );
+            trainingModule->getType( x, y );
 
             //if ( type <= 0 ) {
                 //trainingPlot->addRedPoint( x, y );
@@ -47,13 +47,13 @@ void MainWindow::plotClick(QMouseEvent* evt) {
             trainingModule->addPoint( x, y, TrainingModule::RED );
             trainingPlot->addPoint( x, y, TrainingModule::RED );
             }
-        else if ( ui->blueRB->isChecked() ) {
-            trainingModule->addPoint( x, y, TrainingModule::BLUE );
-            trainingPlot->addPoint( x, y, TrainingModule::BLUE );
-            }
         else if ( ui->greenRB->isChecked() ) {
             trainingModule->addPoint( x, y, TrainingModule::GREEN );
             trainingPlot->addPoint( x, y, TrainingModule::GREEN );
+            }
+        else if ( ui->blueRB->isChecked() ) {
+            trainingModule->addPoint( x, y, TrainingModule::BLUE );
+            trainingPlot->addPoint( x, y, TrainingModule::BLUE );
             }
         }
     }

@@ -1,6 +1,13 @@
 #include "trainingmodule.h"
 
 void TrainingModule::setupWeightMatrixes() {
+    if (!weightMatrixes.empty()) {
+        for(int i = 0; i < weightMatrixes.size(); ++i) {
+            delete weightMatrixes[i];
+            }
+        weightMatrixes.clear();
+        }
+
     // First hidden layer
     Matrix* first = new Matrix(neuronsLayer1, INPUT_SIZE + 1);
     initializeMatrix(first);
@@ -125,7 +132,7 @@ Matrix* TrainingModule::getFirstLayerMatrix() {
 
 void TrainingModule::training( TrainingPlot* tp ) {
     const unsigned int TOTAL_LAYERS = layerNum + 1;
-    double squaredError = 1.0;
+    double squaredError = 100.0;
     std::vector<double> errorVect;
     // a0, [am, ..., aM-1], and aM
     std::vector<std::vector<double>> outputVectors( TOTAL_LAYERS + 1, std::vector<double>() );
@@ -161,11 +168,11 @@ void TrainingModule::training( TrainingPlot* tp ) {
                     }
                 else {
                     Matrix transpose = weightMatrixes[i + 1]->transpose().cutFirstRow();
-                    sensitivityVect[i] = sigmoidMatrix * transpose * sensitivityVect[i + 1];
+                    Matrix sigmoidTransposeProduct = sigmoidMatrix * transpose;
+                    sensitivityVect[i] = sigmoidTransposeProduct * sensitivityVect[i + 1];
                     }
                 }
-            squaredError += sqrt(pow(errorVect[0],2) + pow(errorVect[1],2) + pow(errorVect[2],2))/2;
-            qDebug() << squaredError;
+            squaredError += (pow(errorVect[0],2) + pow(errorVect[1],2) + pow(errorVect[2],2));
 
             // ---- Weight update ----
             for ( int i = 0; i < weightMatrixes.size(); ++i ) {
@@ -175,11 +182,13 @@ void TrainingModule::training( TrainingPlot* tp ) {
                 (*weightMatrixes[i]) = (*weightMatrixes[i]) + update;
                 }
             }
+        qDebug() << currentEpoch << ": " << squaredError;
         ++currentEpoch;
 
         convergenceEpochLbl->setText( QString::number( currentEpoch ) );
         }
     updateGUI( tp );
+    gradientGraph( tp );
     }
 
 std::vector<double> TrainingModule::feedforward(std::vector<std::vector<double>>& outputs, std::vector<std::vector<double>>& nets) {
@@ -212,15 +221,21 @@ int TrainingModule::getType(double x, double y) {
     std::vector<std::vector<double>> outputs(totalLayers + 1, std::vector<double>() );
     std::vector<double> results;
     std::vector<std::vector<double>> nets( totalLayers, std::vector<double>() );
-    int r, g, b;
     outputs[0].push_back(-1);
     outputs[0].push_back(x);
     outputs[0].push_back(y);
     results = feedforward(outputs, nets);
-    r = results[RED] > 0.9 ? 1 : 0;
-    g = results[GREEN] > 0.9 ? 1 : 0;
-    b = results[BLUE] > 0.9 ? 1 : 0;
-    qDebug() << results;
-    qDebug() << "R: " << r << " G: " << g << " B: " << b;
-    return 0;
+    return std::distance(results.begin(), std::max_element(results.begin(), results.end()));;
+}
+
+void TrainingModule::gradientGraph( TrainingPlot* tp ) {
+    int output;
+    for (double i = -5.0; i <= 5.0; i += 0.5 ) {
+        for (double j = -5.0; j <= 5.0; j += 0.5) {
+            output = getType(i, j);
+            //qDebug() << "X: " << i << " Y: " << j << " Clase: " << output;
+            tp->addToGradient(i, j, output);
+            }
+        }
+    tp->updatePlot();
     }

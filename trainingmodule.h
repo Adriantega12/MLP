@@ -81,6 +81,8 @@ class TrainingModule {
         std::vector<double> feedforward(std::vector<std::vector<double>>&, std::vector<std::vector<double>>&);
 
         int getType( double x, double y );
+
+        void gradientGraph(TrainingPlot *);
     };
 
 #endif // TRAININGMODULE_H

@@ -12,6 +12,9 @@ class TrainingPlot {
         QCPGraph* redPoints;
         QCPGraph* bluePoints;
         QCPGraph* greenPoints;
+        QCPGraph* gradientRed;
+        QCPGraph* gradientBlue;
+        QCPGraph* gradientGreen;
 
         Matrix* firstLayer;
 
@@ -31,6 +34,8 @@ class TrainingPlot {
         void updatePlot();
 
         void addPoint(double x, double y , int type);
+
+        void addToGradient( double x, double y, int type );
     };
 
 #endif // TRAININGPLOT_H

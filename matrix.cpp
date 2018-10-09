@@ -59,7 +59,10 @@ Matrix Matrix::operator+(Matrix& m) {
 
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
-            result[i][j] = matrixContainer[i][j] + m.matrixContainer[i][j];
+            double a = matrixContainer[i][j];
+            double b = m.matrixContainer[i][j];
+            //result[i][j] = matrixContainer[i][j] + m.matrixContainer[i][j];
+            result[i][j] = a + b;
             }
         }
 
