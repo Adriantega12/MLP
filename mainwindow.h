@@ -5,6 +5,7 @@
 
 #include "trainingplot.h"
 #include "trainingmodule.h"
+#include "errorplot.h"
 
 namespace Ui {
     class MainWindow;
@@ -32,6 +33,7 @@ private:
 
         TrainingPlot* trainingPlot;
         TrainingModule* trainingModule;
+        ErrorPlot* errorPlot;
     };
 
 #endif // MAINWINDOW_H

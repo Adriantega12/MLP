@@ -12,7 +12,7 @@
 #include "randdouble.h"
 #include "matrix.h"
 #include "trainingplot.h"
-//#include "errorplot.h"
+#include "errorplot.h"
 
 class TrainingPlot;
 
@@ -39,7 +39,6 @@ class TrainingModule {
 
         std::vector<Inputs> trainingSet;
         std::vector<Matrix*> weightMatrixes;
-        std::vector<std::vector<double>> outputVectors;
 
         void setupWeightMatrixes();
         void initializeMatrix( Matrix* );
@@ -53,6 +52,7 @@ class TrainingModule {
         static std::vector<double> sigmoidDerivative(std::vector<double> vect);
         static std::vector<double> scalarByVector(double, std::vector<double>);
         static Matrix scalarByMatrix(double, Matrix);
+        static std::vector<double> pointwiseProductVector(std::vector<double>, std::vector<double>);
         std::vector<double> getError(std::vector<int>, std::vector<double>);
 
     public:
@@ -72,7 +72,7 @@ class TrainingModule {
 
         Matrix* getFirstLayerMatrix();
 
-        void training( TrainingPlot* );
+        void training( TrainingPlot*, ErrorPlot* );
 
         void updateValues();
 

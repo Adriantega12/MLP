@@ -69,6 +69,21 @@ Matrix Matrix::operator+(Matrix& m) {
     return result;
     }
 
+Matrix Matrix::operator-(Matrix& m) {
+    Matrix result(rows, columns);
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+            double a = matrixContainer[i][j];
+            double b = m.matrixContainer[i][j];
+            //result[i][j] = matrixContainer[i][j] + m.matrixContainer[i][j];
+            result[i][j] = a - b;
+            }
+        }
+
+    return result;
+    }
+
 Matrix Matrix::operator*(Matrix& m) {
     double sum;
 
@@ -90,6 +105,18 @@ Matrix Matrix::operator*(Matrix& m) {
         }
 
     return mResult;
+}
+
+Matrix Matrix::operator*(double scalar) {
+    Matrix result(rows, columns);
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+            result[i][j] = scalar * matrixContainer[i][j];
+            }
+        }
+
+    return result;
     }
 
 std::vector<double> Matrix::operator*(std::vector<double>& v) {
@@ -120,5 +147,9 @@ Matrix& Matrix::operator=(Matrix m) {
             this->matrixContainer[i][j] = m.matrixContainer[i][j];
             }
         }
+
+    rows = m.rows;
+    columns = m.columns;
+
     return *this;
     }

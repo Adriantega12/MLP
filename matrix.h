@@ -20,7 +20,9 @@ class Matrix {
 
         std::vector<double>& operator[](int index);
         Matrix operator+(Matrix& m);
+        Matrix operator-(Matrix& m);
         Matrix operator*(Matrix& m);
+        Matrix operator*(double scalar);
         std::vector<double> operator*(std::vector<double>& v);
         Matrix& operator=(Matrix);
     };

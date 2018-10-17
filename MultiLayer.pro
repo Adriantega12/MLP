@@ -29,7 +29,8 @@ SOURCES += \
     qcustomplot.cpp \
     trainingmodule.cpp \
     trainingplot.cpp \
-    matrix.cpp
+    matrix.cpp \
+    errorplot.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -37,7 +38,8 @@ HEADERS += \
     trainingmodule.h \
     randdouble.h \
     trainingplot.h \
-    matrix.h
+    matrix.h \
+    errorplot.h
 
 FORMS += \
         mainwindow.ui

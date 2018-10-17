@@ -70,7 +70,7 @@ void TrainingPlot::setup( QCustomPlot* plot ) {
 }
 
 void TrainingPlot::setupMatrix(Matrix* m) {
-    firstLayer = m;
+    /*firstLayer = m;
     QVector<double> lineX, lineY;
     lineX.push_back(-6);
     lineX.push_back(0);
@@ -85,11 +85,11 @@ void TrainingPlot::setupMatrix(Matrix* m) {
         lineY[2] = 6 * getSlope((*m)[i]) + getYIntercept((*m)[i]);
         trainingPlot->graph(6 + i)->setData(lineX, lineY);
         }
-    trainingPlot->replot();
+    trainingPlot->replot();*/
     }
 
 void TrainingPlot::updatePlot() {
-    QVector<double> lineX, lineY;
+    /*QVector<double> lineX, lineY;
     lineX.push_back(-6);
     lineX.push_back(0);
     lineX.push_back(6);
@@ -102,7 +102,7 @@ void TrainingPlot::updatePlot() {
         lineY[1] = 0 * getSlope((*firstLayer)[i]) + getYIntercept((*firstLayer)[i]);
         lineY[2] = 6 * getSlope((*firstLayer)[i]) + getYIntercept((*firstLayer)[i]);
         trainingPlot->graph(6 + i)->setData(lineX, lineY);
-        }
+        }*/
     trainingPlot->replot();
     }
 

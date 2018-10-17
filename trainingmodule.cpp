@@ -44,7 +44,7 @@ void TrainingModule::updateGUI(TrainingPlot* tp) {
     }
 
 double TrainingModule::sigmoidFunction(double xVal) {
-    return 1.0 / (1.0 + qExp( -xVal ) );
+    return 1.0 / (1.0 + exp( -xVal ) );
     }
 
 std::vector<double> TrainingModule::sigmoidFunction(std::vector<double> vect) {
@@ -57,7 +57,7 @@ std::vector<double> TrainingModule::sigmoidFunction(std::vector<double> vect) {
 
 double TrainingModule::sigmoidDerivative(double xVal) {
     double functionRes = sigmoidFunction(xVal);
-    return functionRes * (1 - functionRes);
+    return functionRes * (1.0 - functionRes);
     }
 
 std::vector<double> TrainingModule::sigmoidDerivative(std::vector<double> vect) {
@@ -83,6 +83,16 @@ Matrix TrainingModule::scalarByMatrix(double scalar, Matrix m) {
         for (int j = 0; j < m.getColumns(); ++j) {
             result[i][j] = scalar * m[i][j];
             }
+        }
+
+    return result;
+}
+
+std::vector<double> TrainingModule::pointwiseProductVector(std::vector<double> v1, std::vector<double> v2) {
+    std::vector<double> result;
+
+    for (int i = 0; i < v1.size(); ++i) {
+        result.push_back( v1[i] * v2[i] );
         }
 
     return result;
@@ -130,9 +140,9 @@ Matrix* TrainingModule::getFirstLayerMatrix() {
     return weightMatrixes[0];
     }
 
-void TrainingModule::training( TrainingPlot* tp ) {
+void TrainingModule::training(TrainingPlot* tp , ErrorPlot* ep) {
     const unsigned int TOTAL_LAYERS = layerNum + 1;
-    double squaredError = 100.0;
+    double squaredError = 100.0, sumError;
     std::vector<double> errorVect;
     // a0, [am, ..., aM-1], and aM
     std::vector<std::vector<double>> outputVectors( TOTAL_LAYERS + 1, std::vector<double>() );
@@ -140,49 +150,58 @@ void TrainingModule::training( TrainingPlot* tp ) {
     std::vector<std::vector<double>> netVectors( TOTAL_LAYERS, std::vector<double>() );
     // s1, [sm, ..., sM-1], and sM
     std::vector<std::vector<double>> sensitivityVect( TOTAL_LAYERS, std::vector<double>() );
+    // updates
+    std::vector<std::vector<Matrix>> updateMatrices( trainingSet.size(), std::vector<Matrix>(weightMatrixes.size(), Matrix()) );
 
     currentEpoch = 0;
 
     // While desired error is less than squared error or max epochs is reached
     while (currentEpoch < maxEpochs and squaredError > desiredError) {
         // ---- Start epoch -----
-
         squaredError = 0.0;
         for (unsigned int trainingIndex = 0; trainingIndex < trainingSet.size(); ++trainingIndex) {
             // Input layer to a0
-            outputVectors[0] = trainingSet[0].inputs;
+            outputVectors[0] = trainingSet[trainingIndex].inputs;
 
             // ---- Feedforward -----
             feedforward(outputVectors, netVectors);
 
+            // ---- Error calculation ----
+            errorVect = getError(trainingSet[trainingIndex].type, outputVectors[TOTAL_LAYERS]);
+            sumError = pow(errorVect[0],2) + pow(errorVect[1],2) + pow(errorVect[2],2);
+            squaredError += sumError/2.0;
+
             // ---- Backpropagation ----
             for (int i = TOTAL_LAYERS - 1; i >= 0; --i) {
-                Matrix sigmoidMatrix(netVectors[i].size(), netVectors[i].size());
-                for (int j = 0; j < sigmoidMatrix.getRows(); ++j) {
-                    sigmoidMatrix[j][j] = sigmoidDerivative(netVectors[i][j]);
-                    }
-
                 if ( i == TOTAL_LAYERS - 1 ) {
-                    errorVect = getError(trainingSet[trainingIndex].type, outputVectors[TOTAL_LAYERS]);
-                    sensitivityVect[i] = scalarByMatrix(-2.0, sigmoidMatrix) * errorVect;
+                    std::vector<double> sigmoidVect;
+                    sigmoidVect.push_back(sigmoidDerivative(netVectors[i][0]));
+                    sigmoidVect.push_back(sigmoidDerivative(netVectors[i][1]));
+                    sigmoidVect.push_back(sigmoidDerivative(netVectors[i][2]));
+                    sensitivityVect[i] = scalarByVector(-2.0, pointwiseProductVector(sigmoidVect, errorVect));
                     }
                 else {
+                    Matrix sigmoidMatrix(netVectors[i].size(), netVectors[i].size());
+                    for (int j = 0; j < sigmoidMatrix.getRows(); ++j) {
+                        sigmoidMatrix[j][j] = sigmoidDerivative(netVectors[i][j]);
+                        }
                     Matrix transpose = weightMatrixes[i + 1]->transpose().cutFirstRow();
                     Matrix sigmoidTransposeProduct = sigmoidMatrix * transpose;
                     sensitivityVect[i] = sigmoidTransposeProduct * sensitivityVect[i + 1];
                     }
                 }
-            squaredError += (pow(errorVect[0],2) + pow(errorVect[1],2) + pow(errorVect[2],2));
 
-            // ---- Weight update ----
+            // ---- Get updates for this sample ----
             for ( int i = 0; i < weightMatrixes.size(); ++i ) {
                 Matrix transpose = Matrix(outputVectors[i]);
-                Matrix sensitivity = Matrix(scalarByVector(-learningRate, sensitivityVect[i])).transpose();
+                Matrix sensitivity = Matrix(scalarByVector( -learningRate, sensitivityVect[i])).transpose();
                 Matrix update = sensitivity * transpose;
                 (*weightMatrixes[i]) = (*weightMatrixes[i]) + update;
                 }
             }
+
         qDebug() << currentEpoch << ": " << squaredError;
+        ep->addData(currentEpoch, squaredError);
         ++currentEpoch;
 
         convergenceEpochLbl->setText( QString::number( currentEpoch ) );
@@ -230,8 +249,8 @@ int TrainingModule::getType(double x, double y) {
 
 void TrainingModule::gradientGraph( TrainingPlot* tp ) {
     int output;
-    for (double i = -5.0; i <= 5.0; i += 0.5 ) {
-        for (double j = -5.0; j <= 5.0; j += 0.5) {
+    for (double i = -5.0; i <= 5.0; i += 0.25 ) {
+        for (double j = -5.0; j <= 5.0; j += 0.25) {
             output = getType(i, j);
             //qDebug() << "X: " << i << " Y: " << j << " Clase: " << output;
             tp->addToGradient(i, j, output);
